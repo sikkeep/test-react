@@ -1,23 +1,26 @@
-// Import the functions you need from the SDKs you need
+// firebaseConfig.ts
+
 import { initializeApp } from "firebase/app";
 import { getDatabase } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getFirestore } from 'firebase/firestore';
+import dotenv from 'dotenv';
 
-// Your web app's Firebase configuration
+dotenv.config();
+
 const firebaseConfig = {
-  apiKey: "AIzaSyApA4K90CUbP0_-nVFoykcYjiuUpLTHuKI",
-  authDomain: "fir-a0443.firebaseapp.com",
-  databaseURL: "https://fir-a0443-default-rtdb.europe-west1.firebasedatabase.app/",
-  projectId: "fir-a0443",
-  storageBucket: "fir-a0443.appspot.com",
-  messagingSenderId: "275624763707",
-  appId: "1:275624763707:web:67a9d272fb1ecbeff4571e"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth(app);
+const firestore = getFirestore(app); 
 
-export { db, auth };
+export { db, auth, firestore };

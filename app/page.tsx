@@ -2,18 +2,16 @@
 'use client';
 
 import React from 'react';
-import Home from '../components/Home';
+import Home from '@/components/Home';
+import { Toaster } from 'sonner';
 
 
 const IndexPage: React.FC = () => {
-  const formProps = {
-    classDisplay: 'someClass',
-    label: 'someLabel'
-  };
   return (
-  <>
-    <Home />
-  </>  
+    <>
+      <Home/>
+      <Toaster/>
+    </>
   );
 };
 
