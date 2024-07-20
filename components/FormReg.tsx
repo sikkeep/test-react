@@ -3,7 +3,7 @@ import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { auth, db } from '@/firebaseConfig';
+import { auth } from '@/lib/firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { ref, set } from 'firebase/database';
 import { toast } from 'sonner';
@@ -11,11 +11,16 @@ import ButtonSubmit from '@/components/ui/ButtonSubmit';
 import InputEmail from '@/components/ui/InputEmail';
 import InputPassword from '@/components/ui/InputPassword';
 
-
 // validation scheme
 const schema = yup.object().shape({
-  email: yup.string().email('Invalid email address').required('Email is required'),
-  password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required')
+  email: yup
+    .string()
+    .email('Invalid email address')
+    .required('Email is required'),
+  password: yup
+    .string()
+    .min(6, 'Password must be at least 6 characters')
+    .required('Password is required'),
 });
 
 interface IFormInput {
@@ -24,23 +29,31 @@ interface IFormInput {
 }
 
 const Register: React.FC = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm<IFormInput>({
-    resolver: yupResolver(schema)
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IFormInput>({
+    resolver: yupResolver(schema),
   });
 
   const onSubmit: SubmitHandler<IFormInput> = async ({ email, password }) => {
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
       const user = userCredential.user;
 
       // save data in Realtime Database
-      await set(ref(db, 'users/' + user.uid), {
-        email: user.email
-      });
+      // await set(ref(db, 'users/' + user.uid), {
+      //   email: user.email,
+      // });
 
-      toast.success('Registration successful'); 
+      toast.success('Registration successful');
     } catch (error) {
-      toast.error('Registration error'); 
+      toast.error('Registration error');
     }
   };
 
@@ -49,7 +62,9 @@ const Register: React.FC = () => {
       <InputEmail register={register} errors={errors} />
       {errors.email && <p className="text-red-500">{errors.email.message}</p>}
       <InputPassword register={register} errors={errors} />
-      {errors.password && <p className="text-red-500">{errors.password.message}</p>}
+      {errors.password && (
+        <p className="text-red-500">{errors.password.message}</p>
+      )}
       <ButtonSubmit>Register</ButtonSubmit>
     </form>
   );
