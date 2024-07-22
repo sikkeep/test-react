@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.6.0",
-    "@next-auth/firebase-adapter": "^2.0.1",
     "@radix-ui/react-accordion": "^1.2.0",
     "@types/next-auth": "^3.15.0",
     "autoprefixer": "^10.4.19",
@@ -20,7 +19,7 @@
     "firebase": "^10.12.2",
     "lucide-react": "^0.395.0",
     "next": "14.2.3",
-    "next-auth": "^5.0.0-beta.19",
+    "next-auth": "^4.24.7",
     "next-themes": "^0.3.0",
     "react": "^18",
     "react-dom": "^18",
@@ -29,7 +28,6 @@
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
-    "winston": "^3.13.0",
     "yup": "^1.4.0"
   },
   "devDependencies": {
