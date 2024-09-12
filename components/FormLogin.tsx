@@ -3,6 +3,7 @@ import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { toast } from 'sonner';
 import ButtonSubmit from '@/components/ui/ButtonSubmit';
@@ -34,13 +35,14 @@ const Login: React.FC = () => {
     resolver: yupResolver(loginSchema),
   });
 
+  const router = useRouter();
+
   const onSubmit: SubmitHandler<IFormInput> = async ({ email, password }) => {
     try {
       const result = await signIn('credentials', {
         email,
         password,
-        redirect: true,
-        callbackUrl: '/',
+        redirect: false,
       });
 
       console.log(result);
@@ -49,6 +51,7 @@ const Login: React.FC = () => {
         toast.error('Login failed');
       } else {
         toast.success('Login successful');
+        router.push('/dashboard');
       }
     } catch (error) {
       toast.error('An error occurred');

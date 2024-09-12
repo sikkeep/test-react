@@ -1,7 +1,7 @@
 import type { AuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-// import { signInWithEmailAndPassword } from 'firebase/auth';
-// import { auth } from '@/lib/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 
 const authOptions: AuthOptions = {
   pages: {
@@ -15,36 +15,41 @@ const authOptions: AuthOptions = {
         password: { label: 'Password', type: 'password' },
       },
       authorize: async (credentials): Promise<any> => {
-        console.log('Credentials:', credentials);
+        if (!credentials || !credentials.email || !credentials.password) {
+          throw new Error('Missing email or password');
+        }
 
-        return;
-        // try {
-        //   if (!credentials || !credentials.email || !credentials.password) {
-        //     throw new Error('Missing email or password');
-        //   }
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          (credentials as any).email || '',
+          (credentials as any).password || '',
+        );
 
-        //   const userCredential = await signInWithEmailAndPassword(
-        //     auth,
-        //     (credentials as any).email || '',
-        //     (credentials as any).password || '',
-        //   );
-
-        //   if (userCredential.user) {
-        //     return {
-        //       id: userCredential.user.uid,
-        //       email: userCredential.user.email,
-        //     };
-        //   } else {
-        //     throw new Error('No user found');
-        //   }
-        // } catch (error) {
-        //   console.error('Error in authorize:', error);
-        //   return null;
-        // }
+        if (userCredential.user) {
+          return userCredential.user;
+        }
+        return null;
       },
     }),
   ],
-  debug: true,
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.email = user.email;
+        token.accessToken = user.accessToken;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token) {
+        session.user.id = token.id;
+        session.user.email = token.email;
+        session.user.accessToken = token.accessToken;
+      }
+      return session;
+    },
+  },
 };
 
 export default authOptions;
